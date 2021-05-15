@@ -4,6 +4,12 @@ pipeline{
     tools {
         maven 'maven'
     }
+    environment {
+        ArtifactId = readMavenPom().getArtifactId()
+        GroupId = readMavenPom().getGroupId()
+        Version = readMavenPom().getVersion()
+        Name = readMavenPom().getName()
+    }
 
     stages {
         // Specify various stage with in stages
@@ -27,6 +33,15 @@ pipeline{
         stage ('Nexus') {
             steps {
                 nexusArtifactUploader artifacts: [[artifactId: 'VinayDevOpsLab', classifier: '', file: 'target/VinayDevOpsLab-0.0.4-SNAPSHOT.war', type: 'war']], credentialsId: '620d78dd-6ca3-4fc8-8556-5e386f52ca9d', groupId: 'com.vinaysdevopslab', nexusUrl: '18.222.238.185:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'alissonvisa-snapshot', version: '0.0.4-SNAPSHOT'
+            }
+        }
+
+        stage ('Prinv Env Vars') {
+            steps {
+                echo "Artifact ID is '${ArtifactId}'"
+                echo "Version is '${Version}'"
+                echo "Group ID is '${GroupId}'"
+                echo "Name is '${Name}'"
             }
         }
 
