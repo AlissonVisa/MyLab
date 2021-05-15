@@ -9,6 +9,7 @@ pipeline{
         GroupId = readMavenPom().getGroupId()
         Version = readMavenPom().getVersion()
         Name = readMavenPom().getName()
+        Packaging = readMavenPom().getPackaging()
     }
 
     stages {
@@ -36,8 +37,8 @@ pipeline{
                     [
                         artifactId: '${ArtifactId}', 
                         classifier: '', 
-                        file: "target/${ArtifactId}-${Version}.war", 
-                        type: 'war'
+                        file: "target/${ArtifactId}-${Version}.${Packaging}", 
+                        type: '${Packaging}'
                     ]
                 ], 
                 credentialsId: '620d78dd-6ca3-4fc8-8556-5e386f52ca9d', 
