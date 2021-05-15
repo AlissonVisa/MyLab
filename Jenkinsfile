@@ -33,21 +33,26 @@ pipeline{
         // stage3 : publish to nexus
         stage ('Nexus') {
             steps {
-                nexusArtifactUploader artifacts: [
-                    [
-                        artifactId: "${ArtifactId}", 
-                        classifier: '', 
-                        file: "target/${ArtifactId}-${Version}.${Packaging}", 
-                        type: "${Packaging}"
-                    ]
-                ], 
-                credentialsId: '620d78dd-6ca3-4fc8-8556-5e386f52ca9d', 
-                groupId: "${GroupId}", 
-                nexusUrl: '18.222.238.185:8081', 
-                nexusVersion: 'nexus3', 
-                protocol: 'http', 
-                repository: 'alissonvisa-snapshot', 
-                version: "${Version}"
+                script {
+
+                    def NexusRepo = Version.endsWith('SNAPSHOT') ? 'alissonvisa-snapshot' : 'alissonvisa-release'
+
+                    nexusArtifactUploader artifacts: [
+                            [
+                                artifactId: "${ArtifactId}", 
+                                classifier: '', 
+                                file: "target/${ArtifactId}-${Version}.${Packaging}", 
+                                type: "${Packaging}"
+                            ]
+                        ], 
+                        credentialsId: '620d78dd-6ca3-4fc8-8556-5e386f52ca9d', 
+                        groupId: "${GroupId}", 
+                        nexusUrl: '18.222.238.185:8081', 
+                        nexusVersion: 'nexus3', 
+                        protocol: 'http', 
+                        repository: "${NexusRepo}", 
+                        version: "${Version}"
+                }
             }
         }
 
